@@ -1,10 +1,11 @@
-name: CI - Run tests on every commit
+name: CI - Python Unit Tests
 
 on:
   push:
-    branches: ["**"]
+    branches: [ main ]
   pull_request:
-    branches: ["**"]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   tests:
@@ -19,15 +20,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pytest
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-
-      # Hace importable tu carpeta src dentro del runner de GitHub
-      - name: Make src importable
+      # Tu código fuente está en lab4_tests_example/src
+      - name: Set PYTHONPATH to src
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE/lab4_tests_example/src" >> $GITHUB_ENV
 
-      # Ejecuta pruebas de tu carpeta tests
-      - name: Run tests
-        run: pytest lab4_tests_example/tests -q
+      # (Opcional) Diagnóstico por si hay errores de import/colección
+      - name: Debug layout and sys.path
+        run: |
+          python -V
+          pwd
+          ls -R
+          python - << 'PY'
+          import os, sys
+          print("GITHUB_WORKSPACE:", os.environ.get("GITHUB_WORKSPACE"))
+          print("PYTHONPATH:", os.environ.get("PYTHONPATH"))
+          print("sys.path:")
+          for p in sys.path: print(" -", p)
+          PY
+
+      # Tus pruebas están en lab4_tests_example/tests
+      - name: Run unittest discovery
+        run: python -m unittest discover -v -s lab4_tests_example/tests -p "test_*.py"
