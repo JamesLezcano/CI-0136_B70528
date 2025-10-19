@@ -18,16 +18,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
 
-      - name: Install test dependency (pytest)
+      - name: Install pytest
         run: |
           python -m pip install --upgrade pip
           pip install pytest
 
+      # Hace importable tu carpeta src dentro del runner de GitHub
       - name: Make src importable
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE/lab4_tests_example/src" >> $GITHUB_ENV
 
+      # Ejecuta pruebas de tu carpeta tests
       - name: Run tests
         run: pytest lab4_tests_example/tests -q
-
