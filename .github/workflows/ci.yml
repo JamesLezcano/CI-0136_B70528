@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10", "3.11" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies (if any)
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f lab4_tests_example/requirements.txt ]; then pip install -r lab4_tests_example/requirements.txt; fi
+
+      - name: Run unit tests
+        working-directory: ./lab4_tests_example
+        env:
+          PYTHONPATH: ./
+        run: |
+          python -m unittest discover -v
+
+deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulated deploy
+        run: echo "✅ Tests OK. Despliegue simulado completado."

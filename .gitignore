@@ -1,0 +1,7 @@
+# Bytecode / caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# (Opcional) también dentro de tu proyecto
+lab4_tests_example/**/__pycache__/
