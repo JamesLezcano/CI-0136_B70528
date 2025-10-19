@@ -35,10 +35,3 @@ jobs:
           PYTHONPATH: ./
         run: |
           python -m unittest discover -v
-
-    deploy:
-      needs: test
-      runs-on: ubuntu-latest
-      steps:
-        - name: Simulated deploy
-          run: echo " Tests OK. Despliegue simulado completado."
