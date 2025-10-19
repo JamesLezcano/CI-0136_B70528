@@ -20,24 +20,26 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Tu código fuente está en lab4_tests_example/src
-      - name: Set PYTHONPATH to src
-        run: echo "PYTHONPATH=$GITHUB_WORKSPACE/lab4_tests_example/src" >> $GITHUB_ENV
+      # 🔧 CLAVE: que 'src' sea localizable -> PYTHONPATH debe ser la carpeta que contiene 'src'
+      - name: Set PYTHONPATH so 'src' is importable
+        run: echo "PYTHONPATH=$GITHUB_WORKSPACE/lab4_tests_example" >> $GITHUB_ENV
 
-      # (Opcional) Diagnóstico por si hay errores de import/colección
-      - name: Debug layout and sys.path
+      # (opcional) diagnóstico rápido por si algo más falla
+      - name: Debug layout & sys.path
         run: |
           python -V
-          pwd
           ls -R
           python - << 'PY'
           import os, sys
-          print("GITHUB_WORKSPACE:", os.environ.get("GITHUB_WORKSPACE"))
           print("PYTHONPATH:", os.environ.get("PYTHONPATH"))
           print("sys.path:")
           for p in sys.path: print(" -", p)
+          # Sanity import donde fallaba:
+          try:
+              import src.models.character as _; print("OK: src.models.character")
+          except Exception as e:
+              print("FAIL: src.models.character ->", repr(e))
           PY
 
-      # Tus pruebas están en lab4_tests_example/tests
       - name: Run unittest discovery
         run: python -m unittest discover -v -s lab4_tests_example/tests -p "test_*.py"
