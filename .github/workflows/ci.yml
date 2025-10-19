@@ -36,9 +36,9 @@ jobs:
         run: |
           python -m unittest discover -v
 
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Simulated deploy
-        run: echo "✅ Tests OK. Despliegue simulado completado."
+    deploy:
+      needs: test
+      runs-on: ubuntu-latest
+      steps:
+        - name: Simulated deploy
+          run: echo " Tests OK. Despliegue simulado completado."
