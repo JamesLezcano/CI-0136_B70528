@@ -11,10 +11,8 @@ class TestTestPotion(unittest.TestCase):
         target = Character("Sesshomaru", 50)
         test_potion = DummyPotion  ()
 
-        # CombatSystem debe tratar a TestPotion como cualquier Potion
         result = combat.perform_use_potion(test_potion, target)
 
-        # Verificamos que se comporta como una Potion en el sistema
         self.assertIn("posion", result)
         self.assertEqual(target.health, 50) 
 

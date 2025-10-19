@@ -2,9 +2,9 @@ name: CI - Python Unit Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: ["**"] # Dispara en cualquier push a cualquier rama
   pull_request:
-    branches: [ main ]
+    branches: ["**"] # Dispara en cualquier pull a cualquier rama
   workflow_dispatch:
 
 jobs:
@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 🔧 CLAVE: que 'src' sea localizable -> PYTHONPATH debe ser la carpeta que contiene 'src'
+        # Hace que el paquete "src" sea importable.
       - name: Set PYTHONPATH so 'src' is importable
         run: echo "PYTHONPATH=$GITHUB_WORKSPACE/lab4_tests_example" >> $GITHUB_ENV
 
-      # (opcional) diagnóstico rápido por si algo más falla
+      # Crea un paso para visualizar el diagnóstico del entorno y de los imports 
       - name: Debug layout & sys.path
         run: |
           python -V
@@ -41,5 +41,6 @@ jobs:
               print("FAIL: src.models.character ->", repr(e))
           PY
 
+        # Ejecuta los tests con unittest
       - name: Run unittest discovery
         run: python -m unittest discover -v -s lab4_tests_example/tests -p "test_*.py"
